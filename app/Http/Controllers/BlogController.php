@@ -36,10 +36,11 @@ class BlogController extends Controller
 
     public function destroy($id)
     {
-        $blog = Blog::find($id);
+        $blog = Blog::findOrFail($id);
         $blog->delete();
-        $path = 'images/blog'.$blog->image;
-        File::delete($path);
+        $path = public_path().'/images/blog/'.$blog->image;
+        // File::delete($path);
+        unlink($path);
        return redirect()->back();
     }
 
@@ -53,6 +54,11 @@ class BlogController extends Controller
 
 
          if($request->hasFile('image')){
+            $path = public_path().'/images/blog/'.$blog->image;
+                  if (File::exists($path)) {
+                    //File::delete($image_path);
+                    unlink($path);
+                }
             $request->file('image')->move('images/blog/',$request->file('image')->getClientOriginalName());
             $blog->image = $request->file('image')->getClientOriginalName();
             $blog->save();

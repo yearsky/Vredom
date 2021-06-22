@@ -22,8 +22,14 @@ Route::post('/login','AuthController@login');
 Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('/dashboard','DashboardController@index');
+	//Message
 	Route::get('/message/all','DashboardController@message');
+	
+	//Portofolio
 	Route::get('/portofolio/all','DashboardController@portofolio');
+	Route::post('/portofolio/addnew','PortofolioController@addnew');
+	Route::delete('/portofolio/delete/{id}','PortofolioController@destroy')->name('pr.destroy');
+	Route::patch('/portofolio/{id}/update','PortofolioController@edit');
 	//blog
 	Route::get('/blog/all','DashboardController@blog');
 	Route::post('/blog/addnew','BlogController@addnew');

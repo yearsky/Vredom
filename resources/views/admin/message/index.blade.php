@@ -2,7 +2,7 @@
 @section('content')
 <div class="projects-section">
       <div class="projects-section-header">
-        <p>All Data Blog</p>
+        <p>Data seluruh Pesan</p>
         <button type="button" data-toggle="modal" data-target="#mdl" class="view-btn" title="Tambah data">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="feather feather-list" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3zM12 8v8m-4-4h8"/></svg>
         </button>
@@ -38,7 +38,7 @@
               </button>
             </div>
             <div class="modal-body">
-               <form method="POST" action="{{url('blog/addnew')}}" enctype="multipart/form-data">
+               <form method="POST" action="{{url('portofolio/addnew')}}" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                   <label for="recipient-name" class="col-form-label">Judul</label>
@@ -48,10 +48,6 @@
                   <label for="message-text" class="col-form-label">Deskripsi</label>
                   <textarea class="form-control" name="deskripsi" id="message-text"></textarea>
                 </div>
-                  <div class="form-group">
-                            <label for="exampleInputEmail1">Author</label>
-                            <input type="text" name="author" class="nama form-control" id="exampleInputEmail1" placeholder="Cth: Admin">
-                   </div>
                   <div class="form-group">
                           <label for="exampleInputFile">Image</label>
                           <div class="input-group">
@@ -80,38 +76,35 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Judul</th>
-                <th>Deskripsi</th>
-                <th>Image</th>
-                <th>Author</th>
-                <th>Created_at</th>
+                <th>Subject</th>
+                <th>Pesan</th>
+                <th>Nama</th>
+                <th>Email</th>
+                <th>Nohp</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-          @foreach($blog as $bg)
+          @foreach($message as $ms)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>{{$bg->judul}}</td>
-                <td>{!!limit($bg->deskripsi)!!}</td>
-                <td><img class="img-fluid"
-                  src="{{$bg->getImage()}}"
-                  style="max-width: 300px;max-height: 140px" 
-                   alt="User profile picture"></td></td>
-                <td>{{$bg->author}}</td>
-                <td>{{$bg->created_at}}</td>
+                <td>{{$ms->subject}}</td>
+                <td>{!!limit($ms->pesan)!!}</td>
+                <td>{{$ms->pengirim}}</td>
+                <td>{{$ms->email}}</td>
+                <td>{{$ms->nohp}}</td>
                 <td>
                         <div class="input-group-prepend">
                             <button type="button" class="btn btn-danger btn-sm  dropdown-toggle" data-toggle="dropdown">
                               Aksi
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" data-toggle="modal" data-target="#mdl{{$bg->id}}">Edit</a>
-                              <form method="POST" action="{{ route('blog.destroy', [$bg->id]) }}">
+                              <a class="dropdown-item" data-toggle="modal" data-target="#mdl{{$ms->id}}">Balas Pesan</a>
+                              <form method="POST" action="{{ route('ms.destroy', [$ms->id]) }}">
                                   {{ csrf_field() }}
                                   {{ method_field('DELETE') }}
-                                <!--  <a class="dropdown-item" href="{{ route('blog.destroy', [$bg->id]) }}" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a> -->
-                              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this item?');">Delete</button>
+                               
+                              <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this item?');">Hapus Pesan</button>
                               </form>
                               
                             </div>
@@ -122,8 +115,8 @@
         </tbody>
       </table>
       </div>
-      @foreach($blog as $blg)
-      <div class="modal fade" id="mdl{{$blg->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <!--  @foreach($message as $ms)
+      <div class="modal fade" id="mdl{{$ms->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -134,21 +127,17 @@
             </div>
             <div class="modal-body">
               
-               <form method="POST" action="/blog/{{$blg->id}}/update" enctype="multipart/form-data">
+               <form method="POST" action="/message/{{$ms->id}}/update" enctype="multipart/form-data">
                 @csrf
                 @method('patch')
                 <div class="form-group">
                   <label for="recipient-name" class="col-form-label">Judul</label>
-                  <input type="text" value="{{$blg->judul}}" name="judul" class="form-control" id="recipient-name">
+                  <input type="text" value="{{$ms->judul}}" name="judul" class="form-control" id="recipient-name">
                 </div>
                 <div class="form-group">
                   <label for="message-text" class="col-form-label">Deskripsi</label>
-                  <textarea class="form-control" name="deskripsi" id="message-text">{{$blg->deskripsi}}</textarea>
+                  <textarea class="form-control" name="deskripsi" id="message-text">{{$ms->deskripsi}}</textarea>
                 </div>
-                  <div class="form-group">
-                            <label for="exampleInputEmail1">Author</label>
-                            <input type="text" name="author" class="nama form-control" id="exampleInputEmail1" value="{{$blg->author}}" placeholder="Cth: Admin">
-                   </div>
                   <div class="form-group">
                           <label for="exampleInputFile">Image</label>
                           <div class="input-group">
@@ -169,7 +158,7 @@
           </div>
         </div>
       </div>
-       @endforeach
+       @endforeach -->
 </div>
 @endsection
 @section('script')
